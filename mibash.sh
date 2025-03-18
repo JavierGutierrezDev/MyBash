@@ -523,10 +523,67 @@ process_command() {
         exit)
             exit_show
             ;;
-        *)
+       
+        cambiardir)
+            cd "$@"; ret=$?
+            ;;
+        ver)
+            cat "$@"; ret=$?
+            ;;
+        creardir)
+            mkdir "$@"; ret=$?
+            ;;
+        esquema)
+            tree "$@"; ret=$?
+            ;;
+        creararch)
+            touch "$@"; ret=$?
+            ;;
+        editor)
+            nano "$@"; ret=$?
+            ;;
+        manual)
+            man "$@"; ret=$?
+            ;;
+        listartodo)
+            ls -lrt "$@"; ret=$?
+            ;;
+        mover)
+            mv "$@"; ret=$?
+            ;;
+        borrardir)
+            rmdir "$@" 2>/dev/null || rm -rf "$@"; ret=$?
+            ;;
+        borrararch)
+            rm "$@"; ret=$?
+            ;;
+        ubi)
+            pwd; ret=$?
+            ;;
+        limpiar)
+            clear; ret=$?
+            ;;
+        historial)
+            history; ret=$?
+            ;;
+        ecosobre)
+            echo "$@" > "$@"; ret=$?
+            ;;
+        econueva)
+            echo "$@" >> "$@"; ret=$?
+            ;;
+        tipoarch)
+            file "$@"; ret=$?
+            ;;
+        desweb)
+            wget "$@"; ret=$?
+            ;;
+
+         *)
             "$cmd" "$@"
             ret=$?
             ;;
+        
     esac
     if [ $ret -eq 0 ]; then
         play_success_sound
