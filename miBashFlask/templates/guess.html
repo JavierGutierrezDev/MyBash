@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Adivina el Número</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <h2 class="mb-3 text-center">Adivina el Número</h2>
+    <p class="text-center">Intentos entre 1 y 100.</p>
+
+    <div class="input-group mb-3">
+      <input id="guessInput" type="number" class="form-control" placeholder="Tu suposición">
+      <button id="guessBtn" class="btn btn-primary">Adivinar</button>
+    </div>
+
+    <ul id="history" class="list-group mb-3"></ul>
+    <div class="text-center">
+      <button onclick="window.location.href='/'" class="btn btn-secondary">Volver</button>
+    </div>
+  </div>
+
+  <script>
+    const target = Math.floor(Math.random() * 100) + 1;
+    document.getElementById('guessBtn').onclick = () => {
+      const g = parseInt(document.getElementById('guessInput').value, 10);
+      let msg;
+      if (g < target) msg = 'Más alto';
+      else if (g > target) msg = 'Más bajo';
+      else msg = '¡Correcto!';
+      const li = document.createElement('li');
+      li.className = 'list-group-item';
+      li.textContent = `Intento ${g}: ${msg}`;
+      document.getElementById('history').appendChild(li);
+      if (msg === '¡Correcto!') {
+        document.getElementById('guessBtn').disabled = true;
+      }
+    };
+  </script>
+</body>
+</html>
