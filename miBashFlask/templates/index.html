@@ -5,6 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mi Shell Interactiva</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    /* Paleta pastel oscuro */
+    body {
+      background: linear-gradient(135deg, #334e68, #47376a);
+      color: #e0e0e0;
+    }
+    .btn {
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 .3rem .6rem rgba(0,0,0,0.6);
+    }
+    .card {
+      background-color: #4f6272;
+      border: none;
+      border-radius: .75rem;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 .5rem 1rem rgba(0,0,0,0.6);
+    }
+    #output {
+      background-color: #2f3640;
+      border-radius: .5rem;
+      color: #d1e8e2;
+      white-space: pre-wrap;
+      height: 400px;
+      overflow: auto;
+    }
+    /* Spinner color */
+    .spinner-border {
+      color: #a5c9ca;
+    }
+  </style>
 </head>
 <body class="bg-light">
 
@@ -14,12 +50,11 @@
     <!-- Botones de comando -->
     <div class="row mb-4">
       <div class="col-12 d-flex flex-wrap justify-content-center gap-2">
-        <button class="btn btn-dark" onclick="run('show_help')">Ayuda</button>
-        <button class="btn btn-secondary" onclick="run('show_about')">Acerca</button>
+        <button class="btn btn-dark" onclick="run('help')">Ayuda</button>
+        <button class="btn btn-secondary" onclick="window.location.href='/showAbout'">Acerca</button>
         <button class="btn btn-info" onclick="promptRun('clima','Ciudad para el clima:')">Clima</button>
         <button class="btn btn-secondary" onclick="promptRun('alias','Comando alias (ej: ls -l):')">Alias</button>
-        <button class="btn btn-warning" onclick="promptRun('show_date','(no hace falta argumento)')">Fecha / Hora</button>
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalSpace">Space Invaders</button>
+        <button class="btn btn-warning" onclick="run('show_date')">Fecha / Hora</button>
         <button class="btn btn-primary" onclick="window.location.href='/game/guess'">Adivina Número</button>
         <button class="btn btn-outline-primary" onclick="promptRun('install_app','Paquete a instalar:')">Instalar</button>
         <button class="btn btn-outline-danger" onclick="promptRun('uninstall_app','Paquete a desinstalar:')">Desinstalar</button>

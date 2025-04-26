@@ -48,5 +48,10 @@ def ascii_cmd():
 def game_guess():
     return render_template('guess.html')
 
+
+@app.route('/showAbout')
+def show_about():
+    return render_template('aboutUs.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

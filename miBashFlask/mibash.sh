@@ -3,6 +3,48 @@
 
 TTS_AUTO=0
 
+
+
+process_command() {
+    cmd="$1"; shift
+    case "$cmd" in
+        install_app)       install_app   "$@" ;;
+        uninstall_app)     uninstall_app "$@" ;;
+        img_to_ascii)      img_to_ascii  "$@" ;;
+        mini_game_1)       mini_game_1       ;;
+        minigame2)         minigame2         ;;
+        kill_process)      kill_process  "$@" ;;
+        show_pid)          show_pid      "$@" ;;
+        show_date)         show_date         ;;
+        clima)             clima         "$@" ;;
+        alias)             alias_command "$@" ;;
+        help)              show_help         ;;
+        show_about)             show_about        ;;
+        *)                 echo "Comando desconocido: $cmd"; show_help ;;
+    esac
+}
+
+show_help() {
+    cat <<EOF
+Comandos disponibles:
+  install_app NOMBRE       Instala un paquete
+  uninstall_app NOMBRE     Desinstala un paquete
+  img_to_ascii RUTA        Convierte imagen a ASCII
+  mini_game_1              Space Invaders
+  minigame2                Adivina el número
+  kill_process PID         Mata un proceso
+  show_pid PID             Muestra detalles del proceso
+  show_date                Fecha y hora actuales
+  clima CIUDAD             Clima (wttr.in)
+  alias ALIAS [ARGS...]    Ejecuta un alias
+  help                     Esta ayuda
+  about                    Acerca del script
+EOF
+}
+
+
+
+
 text_to_speech() {
     # Si quieres voz, activa TTS_AUTO=1 y asegúrate de tener 'say' (macOS) o 'espeak'
     if [ "$TTS_AUTO" -eq 1 ]; then
@@ -17,7 +59,7 @@ text_to_speech() {
 alias_command() {
     # Ejemplo de alias
     case "$1" in
-        ls) command ls "${@:2}" ;;
+        listar) command ls "${@:2}" ;;
         df) command df -h "${@:2}" ;;
         *) echo "Alias no encontrado: $1" ;;
     esac
@@ -51,23 +93,7 @@ minigame2() {
     done
 }
 
-show_help() {
-    cat <<EOF
-Comandos disponibles:
-  install_app NOMBRE       Instala un paquete
-  uninstall_app NOMBRE     Desinstala un paquete
-  img_to_ascii RUTA        Convierte imagen a ASCII
-  mini_game_1              Space Invaders
-  minigame2                Adivina el número
-  kill_process PID         Mata un proceso
-  show_pid PID             Muestra detalles del proceso
-  show_date                Fecha y hora actuales
-  clima CIUDAD             Clima (wttr.in)
-  alias ALIAS [ARGS...]    Ejecuta un alias
-  help                     Esta ayuda
-  about                    Acerca del script
-EOF
-}
+
 
 show_about() {
     echo "Shell interactiva simplificada — funciones disponibles sin animaciones"
@@ -82,6 +108,7 @@ kill_process() {
 }
 
 show_pid() {
+   # ps aux
     ps -p "$1" -f
 }
 
@@ -97,24 +124,6 @@ img_to_ascii() {
     img2txt --width=80 "$1"
 }
 
-process_command() {
-    cmd="$1"; shift
-    case "$cmd" in
-        install_app)       install_app   "$@" ;;
-        uninstall_app)     uninstall_app "$@" ;;
-        img_to_ascii)      img_to_ascii  "$@" ;;
-        mini_game_1)       mini_game_1       ;;
-        minigame2)         minigame2         ;;
-        kill_process)      kill_process  "$@" ;;
-        show_pid)          show_pid      "$@" ;;
-        show_date)         show_date         ;;
-        clima)             clima         "$@" ;;
-        alias)             alias_command "$@" ;;
-        help)              show_help         ;;
-        about)             show_about        ;;
-        *)                 echo "Comando desconocido: $cmd"; show_help ;;
-    esac
-}
 
 
 # ----------------------------------------
