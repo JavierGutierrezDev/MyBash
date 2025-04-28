@@ -1,5 +1,4 @@
 
-# Solo definiciones de funciones, sin animaciones
 
 TTS_AUTO=0
 
@@ -20,10 +19,26 @@ process_command() {
         alias)             alias_command "$@" ;;
         help)              show_help         ;;
         show_about)             show_about        ;;
+        call)             call_number "$@";;
         *)                 echo "Comando desconocido: $cmd"; show_help ;;
     esac
 }
 
+
+# Función para abrir la llamada
+call_number() {
+  local num="$1"
+  [ -z "$num" ] && { echo "Uso: make_call <teléfono>"; return 1; }
+  echo "Llamando a $num…"
+  if command -v xdg-open >/dev/null; then
+    xdg-open "tel:$num"
+  elif command -v open >/dev/null; then
+    open   "tel://$num"
+  else
+    echo "Error: no se puede iniciar la llamada." >&2
+    return 1
+  fi
+}
 show_help() {
     cat <<EOF
 Comandos disponibles:
@@ -46,7 +61,6 @@ EOF
 
 
 text_to_speech() {
-    # Si quieres voz, activa TTS_AUTO=1 y asegúrate de tener 'say' (macOS) o 'espeak'
     if [ "$TTS_AUTO" -eq 1 ]; then
         if command -v say >/dev/null 2>&1; then
             say "$1"
@@ -61,6 +75,7 @@ alias_command() {
     case "$1" in
         listar) command ls "${@:2}" ;;
         df) command df -h "${@:2}" ;;
+        eliminar) command rm "${@:2}";;
         *) echo "Alias no encontrado: $1" ;;
     esac
 }

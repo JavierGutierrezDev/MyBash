@@ -4,8 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mi Shell Interactiva</title>
+  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- ANSI to HTML -->
+  <script src="https://cdn.jsdelivr.net/npm/ansi_up@5"></script>
+  <style>
     /* Paleta pastel oscuro */
     body {
       background: linear-gradient(135deg, #334e68, #47376a);
@@ -15,7 +20,7 @@
       transition: transform .2s ease, box-shadow .2s ease;
     }
     .btn:hover {
-      transform: translateY(-3px);
+      transform: translateY(-2px);
       box-shadow: 0 .3rem .6rem rgba(0,0,0,0.6);
     }
     .card {
@@ -35,42 +40,100 @@
       white-space: pre-wrap;
       height: 400px;
       overflow: auto;
+      padding: 1rem;
+      font-family: monospace;
     }
-    /* Spinner color */
     .spinner-border {
       color: #a5c9ca;
     }
   </style>
 </head>
-<body class="bg-light">
-
+<body>
   <div class="container py-4">
     <h1 class="text-center mb-4">Mi Shell Interactiva</h1>
 
-    <!-- Botones de comando -->
-    <div class="row mb-4">
-      <div class="col-12 d-flex flex-wrap justify-content-center gap-2">
-        <button class="btn btn-dark" onclick="run('help')">Ayuda</button>
-        <button class="btn btn-secondary" onclick="window.location.href='/showAbout'">Acerca</button>
-        <button class="btn btn-info" onclick="promptRun('clima','Ciudad para el clima:')">Clima</button>
-        <button class="btn btn-secondary" onclick="promptRun('alias','Comando alias (ej: ls -l):')">Alias</button>
-        <button class="btn btn-warning" onclick="run('show_date')">Fecha / Hora</button>
-        <button class="btn btn-primary" onclick="window.location.href='/game/guess'">Adivina Número</button>
-        <button class="btn btn-outline-primary" onclick="promptRun('install_app','Paquete a instalar:')">Instalar</button>
-        <button class="btn btn-outline-danger" onclick="promptRun('uninstall_app','Paquete a desinstalar:')">Desinstalar</button>
-        <button class="btn btn-danger" onclick="promptRun('kill_process','PID a matar:')">Matar Proceso</button>
-        <button class="btn btn-warning" onclick="promptRun('show_pid','PID a mostrar info:')">Mostrar PID</button>
+    <!-- Toolbar agrupa botones con iconos y texto -->
+    <div class="btn-toolbar justify-content-center mb-4" role="toolbar" aria-label="Toolbar principal">
+
+      <!-- Grupo: Sistema -->
+      <div class="btn-group me-3" role="group" aria-label="Sistema">
+        <button class="btn btn-dark" onclick="run('help')">
+          <i class="bi bi-question-circle"></i> Ayuda
+        </button>
+
+        <button class="btn btn-warning" onclick="run('show_date')">
+          <i class="bi bi-calendar-event"></i> Fecha/Hora
+        </button>
       </div>
+
+      <!-- Grupo: Utilidades -->
+      <div class="btn-group me-3" role="group" aria-label="Utilidades">
+        <button class="btn btn-info" onclick="promptRun('clima','Ciudad:')">
+          <i class="bi bi-cloud-sun"></i> Clima
+        </button>
+        <button class="btn btn-secondary" onclick="promptRun('alias','Alias y args:')">
+          <i class="bi bi-command"></i> Alias
+        </button>
+      </div>
+
+      <!-- Grupo: Gestión de paquetes -->
+      <div class="btn-group me-3" role="group" aria-label="Paquetes">
+        <button class="btn btn-outline-primary" onclick="promptRun('install_app','Paquete a instalar:')">
+          <i class="bi bi-download"></i> Instalar
+        </button>
+        <button class="btn btn-outline-danger" onclick="promptRun('uninstall_app','Paquete a desinstalar:')">
+          <i class="bi bi-trash"></i> Desinstalar
+        </button>
+      </div>
+
+      <!-- Grupo: Procesos -->
+      <div class="btn-group me-3" role="group" aria-label="Procesos">
+        <button class="btn btn-danger" onclick="promptRun('kill_process','PID a matar:')">
+          <i class="bi bi-x-circle"></i> Matar
+        </button>
+        <button class="btn btn-warning" onclick="promptRun('show_pid','PID a mostrar:')">
+          <i class="bi bi-info-circle-fill"></i> PID Info
+        </button>
+      </div>
+
+      <!-- Grupo: Juegos -->
+      <div class="btn-group" role="group" aria-label="Juegos">
+        <button class="btn btn-success" onclick="window.location.href='/game/guess'">
+          <i class="bi bi-emoji-smile"></i> Adivina
+        </button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSpace">
+          <i class="bi bi-joystick"></i> Space
+        </button>
+      </div>
+
     </div>
 
     <!-- Conversión de imagen a ASCII -->
     <div class="row mb-4">
       <div class="col-12 col-md-6 offset-md-3">
         <div class="card shadow-sm">
-          <div class="card-header text-center">Convertir Imagen a ASCII</div>
+          <div class="card-header text-center text-white bg-secondary">Convertir Imagen a ASCII</div>
           <div class="card-body text-center">
             <input id="fileInput" type="file" accept="image/*" class="form-control mb-3">
-            <button id="asciiBtn" class="btn btn-outline-secondary w-100">Convertir</button>
+            <button id="asciiBtn" class="btn btn-outline-light w-100">
+              <i class="bi bi-terminal-fill"></i> Convertir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Llamada con número -->
+    <div class="row mb-4">
+      <div class="col-12 col-md-6 offset-md-3">
+        <div class="card shadow-sm">
+          <div class="card-header text-center text-white bg-secondary">Hacer una llamada</div>
+          <div class="card-body text-center">
+            <input id="phoneInput" type="text" placeholder="Número de teléfono"
+                   class="form-control mb-3">
+            <button id="callBtn" class="btn btn-success btn-lg">
+              <i id="phoneIcon" class="bi bi-telephone-fill"></i> Llamar
+            </button>
           </div>
         </div>
       </div>
@@ -84,23 +147,22 @@
     <!-- Área de salida -->
     <div class="row">
       <div class="col">
-        <pre id="output"
-             class="bg-dark text-white p-3 rounded"
-             style="height:400px; overflow:auto; white-space: pre-wrap;"></pre>
+        <pre id="output"></pre>
       </div>
     </div>
+
   </div>
 
   <!-- Modal Space Invaders -->
   <div class="modal fade" id="modalSpace" tabindex="-1" aria-labelledby="modalSpaceLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalSpaceLabel">Space Invaders</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="modalSpaceLabel"><i class="bi bi-joystick"></i> Space Invaders</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <p>Para jugar Space Invaders en tu terminal:</p>
+          <p>Para jugar en tu terminal:</p>
           <pre>ninvaders</pre>
         </div>
       </div>
@@ -109,12 +171,10 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
   <script>
     function showSpinner(on) {
       document.getElementById('spinner').classList.toggle('d-none', !on);
     }
-
     function run(cmd, args = []) {
       showSpinner(true);
       document.getElementById('output').textContent = '';
@@ -131,37 +191,44 @@
       })
       .catch(err => {
         showSpinner(false);
-        console.error(cmd, err);
         document.getElementById('output').textContent = 'Error: ' + err;
       });
     }
-
-    function promptRun(cmd, message) {
-      const val = prompt(message);
-      if (!val && message.indexOf('(no hace falta')===-1) return;
-      const args = val ? val.trim().split(/\s+/) : [];
-      run(cmd, args);
+    function promptRun(cmd, msg) {
+      const val = prompt(msg);
+      if (!val) return;
+      run(cmd, val.trim().split(/\s+/));
     }
-
     document.getElementById('asciiBtn').addEventListener('click', () => {
       const file = document.getElementById('fileInput').files[0];
-      if (!file) return alert('Selecciona una imagen primero.');
+      if (!file) return alert('Selecciona una imagen.');
       showSpinner(true);
-      const form = new FormData();
-      form.append('image', file);
+      const form = new FormData(); form.append('image', file);
       fetch('/ascii', { method: 'POST', body: form })
         .then(r => r.json())
         .then(data => {
           showSpinner(false);
-          console.log('ascii', data.output);
-          document.getElementById('output').textContent = data.output;
+          const ansi_up = new AnsiUp();
+          document.getElementById('output').innerHTML = ansi_up.ansi_to_html(data.output);
+          const link = document.createElement('a');
+          link.href = '/asciiArt/' + data.file;
+          link.textContent = 'Ver/Descargar ASCII art';
+          link.className = 'd-block mt-2 text-info';
+          document.getElementById('output').appendChild(link);
         })
-        .catch(err => {
-          showSpinner(false);
-          console.error('ascii', err);
-          document.getElementById('output').textContent = 'Error: ' + err;
-        });
+        .catch(err => { showSpinner(false); document.getElementById('output').textContent = 'Error: '+err; });
     });
+document.getElementById('callBtn').addEventListener('click', () => {
+  const num = document.getElementById('phoneInput').value.trim();
+  if (!num) {
+    alert('Introduce un número de teléfono.');
+    return;
+  }
+  showSpinner(true);
+  run('make_call', [num]);
+});
+
+
   </script>
 </body>
 </html>
